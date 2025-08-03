@@ -1,0 +1,49 @@
+function search(x) {
+  var search = document.getElementById("search");
+  var input = document.getElementById("searchInput").innerText = search.value; 
+
+  var form = new FormData();
+  form.append("s", search.value);
+  form.append("p", x);
+
+  var request = new XMLHttpRequest();
+  request.onreadystatechange = function () {
+    if (request.status == 200 && request.readyState == 4) {
+      var response = request.responseText;
+      document.getElementById("basicSearchResult").innerHTML = response;
+    }
+  };
+
+  request.open("POST", "searchProductProcess.php", true);
+  request.send(form);
+}
+
+<?php
+include "connection.php";
+
+$txt = $_GET["t"];
+$sort = $_GET["s"];
+
+
+$query = "SELECT * FROM `product` ";
+
+if (!empty($txt)) {
+    $query .= "WHERE `title` LIKE '%" . $txt . "%' AND `status_id` = '1'";
+}
+
+if($sort == 1){
+  $query.= "ORDER BY `price` ASC";
+}else if($sort == 2){
+  $query.= "ORDER BY `price` DESC";
+}else if($sort == 3){
+  $query.= "ORDER BY `date` DECS";
+}else {
+  $query;
+}
+?>
+<style>
+  .card:hover {
+    transform: scale(1.05); 
+    
+}
+</style>
